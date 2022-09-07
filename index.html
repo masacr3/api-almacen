@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" placeholder="ponerIP..." id="ip">
+    <button id="btn">VER TIKET</button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", ()=>{
+
+            function post(){
+                var ip = document.querySelector("#ip").value
+                host = "http://"+ip+":3000/api-pdf"
+                
+                //'1.gaseosa coca cola 2.25', '350'
+                //['2.fideo luchetti mostacholi 500g', '320'],
+
+                var data = {
+                    "productos" : [
+                        {
+                            marca : "coca cola",
+                            producto : "gaseosa",
+                            descripcion : "2.25",
+                            cantidad : "1",
+                            subtotal : "350" 
+                        },
+                        {
+                            marca : "luchetti",
+                            producto : "fideo",
+                            descripcion : "mostacholi 500g",
+                            cantidad : "2",
+                            subtotal : "320"
+                        },
+                        {
+                            marca : "tang",
+                            producto : "jugo",
+                            descripcion : "naranja",
+                            cantidad : "5",
+                            subtotal : "360"
+                        }
+                    ]
+                }
+
+
+                fetch(host, {
+                    method: 'POST', // or 'PUT'
+                    body: JSON.stringify(data), // data can be `string` or {object}!
+                    headers:{
+                        'Content-Type': 'application/json'
+                    }
+                }).then(res => res.json())
+                .then(res => {
+                    window.open(res.link, "blank_")
+                })
+            }
+
+            const btn = document.querySelector("#btn")
+
+            btn.addEventListener("click", e=>{
+                post()
+            })
+        })
+
+
+    </script>
+
+</body>
+
+</html>
