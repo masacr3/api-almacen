@@ -64,12 +64,10 @@ app.use(
 
 app.use(cors())
 
-const cargarproducto = require("./routes/cargarproducto")
-const obtenerproducto = require("./routes/obtenerproductos")
+const productos = require("./routes/productos")
 const obtenerpdf = require("./routes/pdf")
 
-app.use(cargarproducto)
-app.use(obtenerproducto)
+app.use(productos)
 app.use(obtenerpdf)
 
 const port = 3000

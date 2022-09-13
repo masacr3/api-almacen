@@ -44,8 +44,8 @@ router.post(pathpdf,(req, res)=>{
     ]
     
     let docDefination = {
-        pageSize: { width: 230, height: 'auto'},
-        pageMargins: [ 10, 10, 10, 10 ],
+        pageSize: { width: 200, height: 'auto'},
+        pageMargins: [ 20, 0, 0, 0 ],
         content : [
             {text: "ALMACEN DAJES", fontSize : 14, alignment : "center"},
             {text: "Punta lara 565", fontSize: 10, alignment : "center"},
@@ -74,7 +74,7 @@ router.post(pathpdf,(req, res)=>{
     res.sendFile(relativo+"/pdfs/test.pdf")
     console.log(cuerpo)
 
-    res.send({ status : "el pdf se creo correctamente" , link : "http://192.168.0.11:3000/api-pdf"})
+    res.send({ status : "el pdf se creo correctamente" , link : "http://192.168.0.23:3000/api-pdf"})
 
 })
 
