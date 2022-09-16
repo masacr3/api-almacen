@@ -5,26 +5,22 @@ var fs = require("fs")
 const path = "/producto"
 
 
-
+//retorna producto en caso de no existir retorna cod:0000 === NULL
 router.get(path+"/:cod", (request, response)=>{
     console.log('GET RESIVIDO')
     let target = request.params.cod
     let archivo = fs.readFileSync("bd.csv","utf-8").split("\n")
-    
-    let articulo = { cod : "0000"}
-    archivo.forEach(linea =>{
-        if( target === linea.split(",")[0]){
-            let data = linea.split(",")
-            //codigobarras,producto,marca,descripcion,precio,preciopublico
-            articulo.cod = data[0]
-            articulo.producto = data[1]
-            articulo.marca = data[2]
-            articulo.descripcion = data[3]
-            articulo.precio = data[4]
-            articulo.preciopublico = data[5]
-        }
-    })
-
+    let articulosinprocesar = archivo.filter(linea => linea.split(",")[0] === target)
+    let articulo = { cod : '0000' }
+    if (articulosinprocesar.length !==0 ){
+        let data = articulosinprocesar[0].replace("\r","").split(",")
+        articulo.cod = data[0]
+        articulo.producto = data[1]
+        articulo.marca = data[2]
+        articulo.descripcion = data[3]
+        articulo.precio = data[4]
+        articulo.preciopublico = data[5]
+    }
     response.send( { articulo })
 })
 
