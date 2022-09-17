@@ -42,4 +42,22 @@ router.post(path,(request, response)=>{
     response.send( { ok : "ok"})
 })
 
+router.put(path,(request, response)=>{
+    let data = request.body
+    let archivo = fs.readFileSync("bd.csv","utf-8").split("\n")
+    let eliminamosProducto = archivo.filter(linea => linea.split(",")[0] !== data.cod)
+    let linea = `${data.cod},${data.producto},${data.marca},${data.descripcion},${data.precio},${data.preciop}`
+    eliminamosProducto.pop()
+    eliminamosProducto.shift()
+    eliminamosProducto.push(linea)
+    let nuevalistaProductos = eliminamosProducto.map(item => item+"\n")
+    console.log(nuevalistaProductos)
+    console.log(linea)
+    fs.writeFileSync("bd.csv","codigobarras,producto,marca,descripcion,precio,preciopublico\n")
+    nuevalistaProductos.forEach(item => fs.appendFileSync("bd.csv", item, err=>{
+        if(err) console.log(err)
+    }))
+    response.send({ ok : "marto pedazo de gato"})
+})
+
 module.exports = router
