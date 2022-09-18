@@ -7,65 +7,18 @@
     <title>Document</title>
 </head>
 <body>
-    <input type="text" placeholder="ponerIP..." id="ip">
-    <button id="btn">VER TIKET</button>
+    <div class="container">
+        <p id="ip"></p>
+    </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", ()=>{
-
-            function post(){
-                var ip = document.querySelector("#ip").value
-                host = "http://"+ip+":3000/api-pdf"
-                
-                //'1.gaseosa coca cola 2.25', '350'
-                //['2.fideo luchetti mostacholi 500g', '320'],
-
-                var data = {
-                    "productos" : [
-                        {
-                            marca : "coca cola",
-                            producto : "gaseosa",
-                            descripcion : "2.25",
-                            cantidad : "1",
-                            subtotal : "350" 
-                        },
-                        {
-                            marca : "luchetti",
-                            producto : "fideo",
-                            descripcion : "mostacholi 500g",
-                            cantidad : "2",
-                            subtotal : "320"
-                        },
-                        {
-                            marca : "tang",
-                            producto : "jugo",
-                            descripcion : "naranja",
-                            cantidad : "5",
-                            subtotal : "360"
-                        }
-                    ]
-                }
-
-
-                fetch(host, {
-                    method: 'POST', // or 'PUT'
-                    body: JSON.stringify(data), // data can be `string` or {object}!
-                    headers:{
-                        'Content-Type': 'application/json'
-                    }
-                }).then(res => res.json())
-                .then(res => {
-                    window.open(res.link, "blank_")
-                })
-            }
-
-            const btn = document.querySelector("#btn")
-
-            btn.addEventListener("click", e=>{
-                post()
+            fetch("http://localhost:3000/ip")
+            .then(res=> res.json())
+            .then(res =>{
+                document.querySelector("#ip").innerHTML = res.ip
             })
         })
-
 
     </script>
 
