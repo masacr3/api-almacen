@@ -9,10 +9,26 @@ html, body{
 
 .container{
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
 #ip{
     font-size: 200px;
+    margin: 0;
+    margin-top: 100px;
+}
+
+#copiar{
+    background-color: transparent;
+    font-size: 100px;
+    border : 1px solid #dd4a45;
+    color: #dd4a45;
+}
+
+#copiar:hover{
+    background-color: transparent;
+    border : 1px solid #45dd4d;
+    color: #45dd4d;
 }
