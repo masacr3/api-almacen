@@ -25,11 +25,11 @@ router.get(homeip, (request, response) =>{
  
             if (alias >= 1) {
                 // this single interface has multiple ipv4 addresses
-                console.log(ifname + ':' + alias, iface.address);
+               ip = iface.address
             } 
             else {
                 // this interface has only one ipv4 adress
-                console.log(ifname, iface.address);
+                
                 ip = iface.address
             }
             ++alias;

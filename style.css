@@ -1,0 +1,18 @@
+html, body{
+    box-sizing:border-box;
+    background-color: #151515;
+    font-size: 18px;
+    color: #169dac;
+    user-select: none;
+    font-family: "helvetica";
+}
+
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#ip{
+    font-size: 200px;
+}
