@@ -82,27 +82,15 @@ router.post(pathpdf,(req, res)=>{
     }
     
     let pdf = new pdfmake(fonts)
-
-    var conseptos = [
-        [{text: 'cant.Consepto', style: 'tableHeader'}, {text: 'subtotal', style: 'tableHeader'}]
-    ]
     
     let docDefination = {
-        pageSize: { width: 200, height: 'auto'},
-        pageMargins: [ 20, 0, 0, 0 ],
+        pageSize: { width: 214, height: 'auto'},
+        pageMargins: [ 5, 5, 5, 5 ],
         content : [
-            {text: "ALMACEN DAJES", fontSize : 14, alignment : "center"},
-            {text: "Punta lara 565", fontSize: 10, alignment : "center"},
+            {text: "ALMACEN DAJES", fontSize : 11, alignment : "center"},
+            {text: "Punta lara 565", fontSize: 9, alignment : "center"},
             {text: "                ", alignment:"center"}, 
-            {
-                style: 'tableExample',
-                table: {
-                    headerRows: 1,
-                    fontSize: 10,
-                    body: cuerpo
-                },
-                layout: 'headerLineOnly'
-            },
+            
             "       ",
             {text : "TOTAL "+total, alignment: "center"},
             "   ",
