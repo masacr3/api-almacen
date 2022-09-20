@@ -115,9 +115,8 @@ router.post(pathpdf,(req, res)=>{
     pdfDoc.end()
 
     var linkpdf = "http://"+ obtenerIP() +"3000/api-pdf"
-    console.log(relativo)
 
-    res.send({ status : "el pdf se creo correctamente" , link : "http://192.168.0.23:3000/api-pdf"})
+    res.send({ status : "el pdf se creo correctamente" , link : linkpdf})
 
 })
 
