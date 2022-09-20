@@ -80,8 +80,8 @@ router.post(pathpdf,(req, res)=>{
     pdfDoc.pipe( fs.createWriteStream("pdfs/test.pdf"))
     pdfDoc.end()
 
-    var relativo = path.relative(__dirname, "pdfs/test.pdf")
-    //res.sendFile(relativo)
+    var ip = localStorage.getItem("coneccionservidor")
+    var linkpdf = "http://"+ ip +"3000/api-pdf"
     console.log(relativo)
 
     res.send({ status : "el pdf se creo correctamente" , link : "http://192.168.0.23:3000/api-pdf"})
