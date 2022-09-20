@@ -6,6 +6,36 @@ const pathpdf = "/api-pdf"
 const pdfmake = require("pdfmake")
 const fs = require("fs")
 
+function obtenerIP(){
+    var os = require('os');
+    var ifaces = os.networkInterfaces();
+
+    var ip = ""
+
+    Object.keys(ifaces).forEach(function (ifname) {
+        var alias = 0;
+
+        ifaces[ifname].forEach(function (iface) {
+            if ('IPv4' !== iface.family || iface.internal !== false) {
+            // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
+            return;
+            }
+ 
+            if (alias >= 1) {
+                // this single interface has multiple ipv4 addresses
+               ip = iface.address
+            } 
+            else {
+                // this interface has only one ipv4 adress
+                
+                ip = iface.address
+            }
+            ++alias;
+        });
+    })
+    return ip
+}
+
 router.get(pathpdf, (req, res)=>{
     //res.sendFile("C:/Users/leo_3/OneDrive/Escritorio/api/pdfs/test.pdf")
     let pathpdf = __dirname.slice(0).replace("\\routes","") + "\\pdfs\\test.pdf"
@@ -14,9 +44,13 @@ router.get(pathpdf, (req, res)=>{
 })
 
 
+
+
+
 //actualizar
 router.post(pathpdf,(req, res)=>{
     
+    var ip = req.body.ip
     var productos = req.body.productos
     console.log(productos)
     //arma producto
@@ -80,8 +114,7 @@ router.post(pathpdf,(req, res)=>{
     pdfDoc.pipe( fs.createWriteStream("pdfs/test.pdf"))
     pdfDoc.end()
 
-    var ip = localStorage.getItem("coneccionservidor")
-    var linkpdf = "http://"+ ip +"3000/api-pdf"
+    var linkpdf = "http://"+ obtenerIP() +"3000/api-pdf"
     console.log(relativo)
 
     res.send({ status : "el pdf se creo correctamente" , link : "http://192.168.0.23:3000/api-pdf"})
