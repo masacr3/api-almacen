@@ -1,3 +1,4 @@
+const path = require("path")
 const express = require("express")
 const router = express.Router()
 const pathpdf = "/api-pdf"
@@ -6,7 +7,10 @@ const pdfmake = require("pdfmake")
 const fs = require("fs")
 
 router.get(pathpdf, (req, res)=>{
-    res.sendFile("C:/Users/leo_3/OneDrive/Escritorio/api/pdfs/test.pdf")
+    //res.sendFile("C:/Users/leo_3/OneDrive/Escritorio/api/pdfs/test.pdf")
+    let pathpdf = __dirname.slice(0).replace("\\routes","") + "\\pdfs\\test.pdf"
+    res.sendFile(pathpdf)
+    //res.send({ok : "PDF GET"})
 })
 
 
@@ -14,11 +18,15 @@ router.get(pathpdf, (req, res)=>{
 router.post(pathpdf,(req, res)=>{
     
     var productos = req.body.productos
+    console.log(productos)
     //arma producto
     var total = 0
     var cuerpo = [
         [{text: 'cant.Consepto', style: 'tableHeader'}, {text: 'subtotal', style: 'tableHeader'}]
     ]
+    // productos.forEach(producto => {
+    //     console.log(producto)
+    // });
     productos.forEach(producto => {
         var linea = []
         var consepto = producto.cantidad +"."+producto.producto+" "+producto.marca+" "+ producto.descripcion
@@ -27,6 +35,8 @@ router.post(pathpdf,(req, res)=>{
         cuerpo.push(linea)
         total += parseInt(producto.subtotal)
     });
+
+    console.log(cuerpo)
 
     const fonts = {
         Roboto: {
@@ -70,12 +80,16 @@ router.post(pathpdf,(req, res)=>{
     pdfDoc.pipe( fs.createWriteStream("pdfs/test.pdf"))
     pdfDoc.end()
 
-    var relativo = "C:/Users/leo_3/OneDrive/Escritorio/api"
-    res.sendFile(relativo+"/pdfs/test.pdf")
-    console.log(cuerpo)
+    var relativo = path.relative(__dirname, "pdfs/test.pdf")
+    //res.sendFile(relativo)
+    console.log(relativo)
 
     res.send({ status : "el pdf se creo correctamente" , link : "http://192.168.0.23:3000/api-pdf"})
 
 })
+
+// router.get(pathpdf, (request, response) =>{
+//     console.log(path.relative(__dirname, "pdfs/test.pdf"))
+// })
 
 module.exports = router
