@@ -114,7 +114,7 @@ router.post(pathpdf,(req, res)=>{
     pdfDoc.pipe( fs.createWriteStream("pdfs/test.pdf"))
     pdfDoc.end()
 
-    var linkpdf = "http://"+ obtenerIP() +"3000/api-pdf"
+    var linkpdf = "http://"+ obtenerIP() +":3000/api-pdf"
 
     res.send({ status : "el pdf se creo correctamente" , link : linkpdf})
 
