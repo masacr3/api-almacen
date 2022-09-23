@@ -22,11 +22,13 @@ const productos = require("./routes/productos")
 const obtenerpdf = require("./routes/pdf")
 const obtenerhome = require("./routes/home")
 const obtenertiket = require("./routes/tiket")
+const obtenerverduleria = require("./routes/verduleria")
 
 app.use(productos)
 app.use(obtenerpdf)
 app.use(obtenerhome)
 app.use(obtenertiket)
+app.use(obtenerverduleria)
 
 const port = 3000
 

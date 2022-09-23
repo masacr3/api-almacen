@@ -3,7 +3,7 @@ const express = require("express")
 const router = express.Router()
 const pathpdf = "/api-pdf"
 
-const pdfmake = require("pdfmake")
+const { jsPDF } = require("jspdf")
 const fs = require("fs")
 
 function obtenerIP(){
@@ -44,9 +44,6 @@ router.get(pathpdf, (req, res)=>{
 })
 
 
-
-
-
 //actualizar
 router.post(pathpdf,(req, res)=>{
     
@@ -55,57 +52,85 @@ router.post(pathpdf,(req, res)=>{
     console.log(productos)
     //arma producto
     var total = 0
-    var cuerpo = [
-        [{text: 'cant.Consepto', style: 'tableHeader'}, {text: 'subtotal', style: 'tableHeader'}]
-    ]
+    var lineas = []
+    var largeLine = 30
     // productos.forEach(producto => {
     //     console.log(producto)
     // });
     productos.forEach(producto => {
-        var linea = []
-        var consepto = producto.cantidad +"."+producto.producto+" "+producto.marca+" "+ producto.descripcion
-        linea.push(consepto)
-        linea.push(producto.subtotal)
-        cuerpo.push(linea)
+        var cantCaracteres = largeLine - 1 - 5 - producto.cantidad.length - producto.producto.length -1 
+        console.log(cantCaracteres)
+        var consepto = producto.cantidad +"."+producto.producto //+" "+producto.marca+" "+ producto.descripcion
+        var overflood = true
+        if (cantCaracteres >= (producto.marca.length+1)){
+            consepto += " " + producto.marca
+            cantCaracteres -= producto.marca.length
+            overflood = false
+        }
+        //rellena
+        console.log("rellena", cantCaracteres)
+        for(let i=0; cantCaracteres > 0 ; i++){
+            consepto += " "
+            cantCaracteres -= 1
+        }
+        console.log("relleno", consepto.length)
+        //inserto
+        consepto += producto.subtotal
+        lineas.push(consepto)
+        if (overflood){
+            var consepto2 = producto.marca +" "+producto.descripcion
+            lineas.push(consepto2)
+        }
+        else{
+            lineas.push(producto.descripcion)
+        }
         total += parseInt(producto.subtotal)
     });
 
-    console.log(cuerpo)
+    let creaComprobante = () => {
+        var opciones = {
+            orientation: 'p',
+            unit: 'mm',
+            format: [76, 297]
+        };
+    
+        var doc = new jsPDF(opciones);
+        var middle = Math.trunc(largeLine / 2)
 
-    const fonts = {
-        Roboto: {
-            normal: './fonts/Roboto-Regular.ttf',
-            bold: './fonts/Roboto-Medium.ttf',
-            italics: './fonts/Roboto-Italic.ttf',
-            bolditalics: './fonts/Roboto-Italic.ttf'
-        },
+        console.log(doc.getFontList())
+        doc.setFont("courier");
+        doc.setFontSize(9);
+        //doc.text("123456789012345678901234567890",10,5)
+        doc.text("DAJES ALMACEN",10 + middle - Math.trunc("DAJES ALMACEN".length / 4,10),10)
+        doc.text("Punta lara 565",10 + middle - Math.trunc("Punta lara 565".length /4,15),15)
+        var x = 10 
+        var y = 25
+
+        lineas.forEach(linea =>{
+            doc.text(linea, x, y)
+            y += 5
+        })
+        // doc.text("1.queso rallado",10,25);
+        // doc.text("sancor reggianito 40g",10,30)
+        // doc.text(10, 35, 'Comprobante No.: 7854214587');
+        // doc.text(10, 40, 'PDV: Pedro Pérez');
+        // doc.text(10, 45, 'Operador: 123654');
+        // doc.text(10, 55, 'Especie vendida: Sophronitis coccinea');
+        // doc.text(10, 60, 'Valor: 35.00');
+        // doc.text(10, 65, 'TBX: 242985290');
+        // doc.text(10, 70, 'Fecha/Hora: 2019-11-05 12:28:21');
+        // doc.text(10, 90, '_______________________________');
+        // doc.text(10, 95, 'Recibí conforme');
+    
+        let data = doc.output();
+        let pathpdf = __dirname.slice(0).replace("\\routes","") + "\\pdfs\\test.pdf"
+        fs.writeFileSync(pathpdf, data, 'binary');
+
     }
-    
-    let pdf = new pdfmake(fonts)
-    
-    let docDefination = {
-        pageSize: { width: 214, height: 'auto'},
-        pageMargins: [ 5, 5, 5, 5 ],
-        content : [
-            {text: "ALMACEN DAJES", fontSize : 11, alignment : "center"},
-            {text: "Punta lara 565", fontSize: 9, alignment : "center"},
-            {text: "                ", alignment:"center"}, 
-            
-            "       ",
-            {text : "TOTAL "+total, alignment: "center"},
-            "   ",
-            {text : "GRACIAS POR SU COMPRA", alignment: "center"}
-        ]
-    }
-    
-    let pdfDoc = pdf.createPdfKitDocument(docDefination, {})
-    pdfDoc.pipe( fs.createWriteStream("pdfs/test.pdf"))
-    pdfDoc.end()
 
-    var linkpdf = "http://"+ obtenerIP() +":3000/api-pdf"
+    creaComprobante()
 
-    res.send({ status : "el pdf se creo correctamente" , link : linkpdf})
-
+    res.send({ok:"ok"})
 })
 
 // router.get(pathpdf, (request, response) =>{
