@@ -58,4 +58,21 @@ router.put(path,(request, response)=>{
     response.send({ ok : "ok"})
 })
 
+router.delete(path+"/:cod",(request, response)=>{
+    console.log("DELETE")
+    let cod = request.params.cod
+    console.log(cod)
+    let archivo = fs.readFileSync("bd.csv","utf-8").split("\n")
+    let eliminamosProducto = archivo.filter(linea => linea.split(",")[0] !== cod)
+    eliminamosProducto.pop()
+    eliminamosProducto.shift()
+    let nuevalistaProductos = eliminamosProducto.map(item => item.replace("\r","")+"\n")
+    console.log(nuevalistaProductos)
+    fs.writeFileSync("bd.csv","codigobarras,producto,marca,descripcion,precio,preciopublico\n")
+    nuevalistaProductos.forEach(item => fs.appendFileSync("bd.csv", item, err=>{
+        if(err) console.log(err)
+    }))
+    response.send({ ok : "ok"})
+})
+
 module.exports = router

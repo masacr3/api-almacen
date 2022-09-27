@@ -1,4 +1,6 @@
 codigobarras,producto,marca,descripcion,precio,preciopublico
+codigobarras,producto,marca,descripcion,precio,preciopublico
+codigobarras,producto,marca,descripcion,precio,preciopublico
 7794000006096,mayonesa,hellmanns,clasica 118g,115,150
 7791866001197,mayonesa,natura,clasica 118g,126,160
 7794000005013,mostaza,savora,original 60g,65,100
@@ -16,6 +18,7 @@ codigobarras,producto,marca,descripcion,precio,preciopublico
 7798031151046,fideos,sol pampeano,tirabuzon,70,100
 7798031151220,fideos,sol pampeano,celentano,70,100
 7790036048260,vino,uvita,blanco dulce 1l,230,270
-1,manzana,verduleria,manzana,200,300
-2,papa,verduleria,papa,90,130
-3,cebolla,verduleria,cebolla,300,450
+ver-item-2,banana,verduleria,banana,350,350
+ver-item-1,tomate,verduleria,tomate,300,300
+ver-item-6,naranja,verduleria,naranja,220,220
+ver-item-4,zanahoria,verduleria,zanahoria,200,200
