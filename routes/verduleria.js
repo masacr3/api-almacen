@@ -24,9 +24,21 @@ router.get(path, (request, response)=>{
 })
 
 router.post(path, (request, response)=>{
+    let contador = fs.readFileSync("contador.csv", "utf-8").split("\n")
+    let contVerduleria = parseInt( contador.filter(linea => linea.split(",")[0] === "verduleria")[0].split(",")[1])+1
+    let actualizamoscontador = contador.filter(linea => linea.split(",")[0] !== "verduleria")
+    let nuevoContador = "verduleria,"+contVerduleria+"\n"
+    actualizamoscontador.shift()
+    actualizamoscontador.pop()
+    actualizamoscontador.push(nuevoContador)
+    fs.writeFileSync("contador.csv","descriptor,contador\n")
+    actualizamoscontador.forEach(item => fs.appendFileSync("contador.csv", item, err=>{
+        if(err) console.log(err)
+    }))
+    
     let archivo = fs.readFileSync("bd.csv","utf-8").split("\n")
     let filtramosProducto = archivo.filter(linea => linea.split(",")[2] == "verduleria")
-    let cod = "ver-item-"+ filtramosProducto.length
+    let cod = "ver-item-"+ contVerduleria
     const data = request.body
     console.log(data)
     if (data === undefined){

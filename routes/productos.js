@@ -45,7 +45,7 @@ router.put(path,(request, response)=>{
     console.log("PUT")
     let data = request.body
     let archivo = fs.readFileSync("bd.csv","utf-8").split("\n")
-    let eliminamosProducto = archivo.filter(linea => linea.split(",")[0] !== data.cod)
+    var eliminamosProducto = archivo.filter(linea => linea.split(",")[0] !== data.cod)
     let linea = `${data.cod},${data.producto},${data.marca},${data.descripcion},${data.precio},${data.preciop}`
     eliminamosProducto.pop()
     eliminamosProducto.shift()
