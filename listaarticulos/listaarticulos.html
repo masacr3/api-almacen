@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="listaArticulos.css">
+    <title>Document</title>
+</head>
+<body>
+
+    <article>
+        <div class="card">
+            <img src="./cocacola225.png" alt="">
+            <div class="title">Coca Cola 2.25</div>
+            <div class="precio">400</div>
+            <div class="controller">
+                <div class="cant">
+                    <button class="btonmenos">-</button>
+                    <div class="cant-value">0</div>
+                    <button class="btonmas">+</button>
+                </div>
+                <button class="agregar">Agregar al carrito</button>
+            </div>
+            <div class="quitar noshow">Quitar del carrito</div>
+        </div>
+        <div class="card">
+            <img src="./fernetbranca75.jpg" alt="">
+            <div class="title">Fernet Branca 75</div>
+            <div class="precio">1800</div>
+            <div class="controller">
+                <div class="cant">
+                    <button class="btonmenos">-</button>
+                    <div class="cant-value">0</div>
+                    <button class="btonmas">+</button>
+                </div>
+                <button class="agregar">Agregar al carrito</button>
+            </div>
+            <div class="quitar noshow">Quitar del carrito</div>
+        </div>
+        <div class="card">
+            <img src="./philips10.jpg" alt="">
+            <div class="title">Philips morris 10</div>
+            <div class="precio">260</div>
+            <div class="controller">
+                <div class="cant">
+                    <button class="btonmenos">-</button>
+                    <div class="cant-value">0</div>
+                    <button class="btonmas">+</button>
+                </div>
+                <button class="agregar">Agregar al carrito</button>
+            </div>
+            <div class="quitar noshow">Quitar del carrito</div>
+        </div>
+    </article>
+    <button class="terminar-pedido">Terminar pedido</button>
+    <div class="modal noshow">
+        <button class="cancelar">x</button>
+        <input type="text" id="nombre" placeholder="ingrese su nombre...">
+        <input type="text" id="celular" placeholder="celular...">
+        <button class="enviar">Enviar pedido</button>
+    </div>
+
+    <script>
+        var carrito = []
+
+        function recolectarPedido(){
+            var pedido = {
+                "cliente" : document.querySelector("#nombre").value,
+                "tel" : document.querySelector("#celular").value,
+                "micarrito" : carrito
+            }
+
+            return pedido
+        }
+
+        function mandarRemito(){
+            console.log(recolectarPedido())
+            
+            opt = {      
+                method: 'POST', // or 'PUT'       
+                body: JSON.stringify(recolectarPedido()), // data can be `string` or {object}!
+                 headers:{        
+                    'Content-Type': 'application/json'
+                }     
+            }
+
+            fetch("/tomarpedido", opt)
+            .then(res=> res.json())
+            .then(res =>{
+                console.log(res)
+            })
+        }
+    </script>
+
+    <script>
+        function resetearProductos(){
+            var articulos = document.querySelectorAll(".card")
+
+            articulos.forEach(articulo =>{
+                articulo.querySelector(".controller .cant .cant-value").innerHTML = "0"
+                Array.from(articulo.querySelector(".controller .cant").children).forEach(item => item.disabled = false)
+                articulo.querySelector(".cant .cant-value").classList.remove("mute")
+                articulo.querySelector(".controller .agregar").disabled = false
+                articulo.querySelector(".quitar").classList.add("noshow")
+            })
+        }
+
+        function habilitarModal(){
+            document.querySelector(".modal").classList.remove("noshow")
+            document.querySelector("body").classList.add("no-scroll")
+        }
+
+        function deshabilitarModal(){
+            document.querySelector(".modal").classList.add("noshow")
+            document.querySelector("body").classList.remove("no-scroll")
+        }
+
+        function habilitarControles(e, item){
+            e.target.parentNode.querySelector(".cant .cant-value").innerHTML = "0"
+            Array.from(e.target.parentNode.querySelector(".cant").children).forEach(it=> it.disabled = false)
+            e.target.parentNode.querySelector(".agregar").disabled = false
+            e.target.parentNode.querySelector(".cant .cant-value").classList.remove("mute")
+            item.disabled = false
+
+            //deshabilita sacar carrito
+            e.target.parentNode.querySelector(".quitar").classList.add("noshow")
+        }
+
+        function deshabilitarControles(e, item){
+            Array.from(e.target.parentNode.children[0].children).forEach(it=> it.disabled = true)
+            e.target.parentNode.parentNode.querySelector(".cant .cant-value").classList.add("mute")
+            item.disabled = true
+
+            //habilita sacar carrito
+            e.target.parentNode.parentNode.querySelector(".quitar").classList.remove("noshow")
+        }
+
+        document.querySelector(".terminar-pedido").addEventListener("click", e=>{
+            habilitarModal()
+        })
+
+        document.querySelector(".cancelar").addEventListener("click", e=>{
+            deshabilitarModal()
+        })
+
+        document.querySelectorAll(".quitar").forEach(item =>{
+            item.addEventListener("click", e=>{
+                var producto = e.target.parentNode.querySelector(".title").innerHTML
+
+                carrito = carrito.filter(Elemento => Elemento.producto != producto )
+
+                habilitarControles(e, item)
+            })
+        })
+
+        document.querySelectorAll(".agregar").forEach(item =>{
+            item.addEventListener("click", e=>{
+                var producto = e.target.parentNode.parentNode.querySelector(".title").innerHTML
+                var cantidad = e.target.parentNode.parentNode.querySelector(".cant .cant-value").innerHTML
+                var precio = e.target.parentNode.parentNode.querySelector(".precio").innerHTML
+                var subtotal = parseInt(precio) * parseInt(cantidad)
+
+                articulo = {
+                    producto : producto,
+                    precio : precio,
+                    cantidad : cantidad,
+                    subtotal : subtotal
+                }
+
+                carrito.push(articulo)
+
+                //disabled controllers
+                deshabilitarControles(e, item)
+
+                console.log(carrito)
+
+
+            })
+        })
+
+        document.querySelectorAll(".btonmas").forEach(item =>{
+            item.addEventListener("click", e=>{
+                var cantidad = e.target.parentNode.querySelector(".cant-value")
+                var value = parseInt(cantidad.innerHTML) + 1
+                cantidad.innerHTML = value
+            })
+        })
+
+        document.querySelectorAll(".btonmenos").forEach(item =>{
+            item.addEventListener("click", e=>{
+                var cantidad = e.target.parentNode.querySelector(".cant-value")
+                var value = parseInt(cantidad.innerHTML) - 1 <= 0 ? 0 : parseInt(cantidad.innerHTML) - 1 
+                cantidad.innerHTML = value
+            })
+        })
+        
+        document.querySelector(".enviar").addEventListener("click", e=>{
+            mandarRemito()
+            deshabilitarModal()
+            resetearProductos()
+        })
+
+    </script>
+    
+</body>
+</html>

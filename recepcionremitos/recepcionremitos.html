@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista pedidos</title>
+</head>
+<body>
+
+    <h2>LISTA PEDIDOS</h2>
+    <ul class="pedidos">
+
+    </ul>
+
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        function agregarPedido(ul, remito){
+
+            var nombre = remito.cliente
+            var cel = remito.tel
+            var pedidos = remito.micarrito
+            console.log(pedidos)
+
+            var li = document.createElement("li")
+            
+            var cliente = document.createElement("div")
+            var infocliente = nombre + " cel: "+cel
+            cliente.innerHTML = infocliente
+
+            li.appendChild(cliente)
+            
+            pedidos.forEach( pedido => {
+                var consepto = document.createElement("div")
+                var articulo = pedido.producto +" cant: "+pedido.cantidad+" subtotal: "+pedido.subtotal
+                consepto.innerHTML = articulo
+                li.appendChild(consepto)    
+            });
+
+            ul.appendChild(li)
+        }
+    </script>
+
+    <script>
+        var socket = io();
+        var contenedorPedido = document.querySelector(".pedidos")
+
+        socket.on('pedido', function(remito) {
+            agregarPedido(contenedorPedido, remito)    
+        });
+    </script>
+</body>
+</html>
